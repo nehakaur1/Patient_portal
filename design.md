@@ -43,30 +43,57 @@
 **Text Diagram:**
 
   +----------------+
-  |   React Frontend  |
+  | React Frontend |
   +--------+-------+
            |
            v
   +--------+--------+
-  |   Express Backend |
+  | Express Backend |
   +--------+--------+
            |
+   +-------+--------+
+   |                |
+   v                v
++--------+     +------------+
+| MongoDB |     | File Storage|
++--------+     +------------+
 
-
----
 
 ## 3. API Specification
 
-### 1. Upload a PDF
+### Upload a PDF
+POST /documents/upload
+Headers: Content-Type: multipart/form-data
+Body: file (PDF)
 
+Response:
+{
+  "message": "File uploaded successfully",
+  "fileId": "12345"
+}
 
-### 2. List all documents
+### List all documents
+GET /documents
 
+Response:
+[
+  {
+    "id": "12345",
+    "filename": "report.pdf",
+    "uploadedAt": "2025-12-10T12:00:00Z"
+  }
+]
 
-### 3. Download a file
+### Download a file
+GET /documents/:id
+Response: PDF file stream
 
-
-### 4. Delete a file
+### Delete a file
+DELETE /documents/:id
+Response:
+{
+  "message": "File deleted successfully"
+}
 
 
 ---
