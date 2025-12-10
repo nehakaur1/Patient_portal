@@ -41,3 +41,12 @@ GET /documents/:id
 ### 4. Delete Document
 DELETE /documents/:id
 
+---
+
+## 4. Screenshots
+
+### 🏠 Home Page (Uploaded Files)
+![Home Page](assets/screenshots/home.png)
+
+### 📤 Upload Page
+![Upload Page](assets/screenshots/upload.png)
