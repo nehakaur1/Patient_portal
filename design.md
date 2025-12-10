@@ -1,188 +1,103 @@
-1. Tech Stack Choices
-Q1. What frontend framework did you use and why?
+# Patient Portal Design Document
 
-I used React.js (with Vite) for the frontend because:
+## 1. Tech Stack Choices
 
-It provides a fast development environment.
+**Q1. Frontend Framework**  
+- **React.js**: Chosen for its component-based architecture, reusability, and fast rendering using the virtual DOM. React also has a large community and many libraries for handling forms, routing, and state management.
 
-Component-based architecture makes UI easier to manage.
+**Q2. Backend Framework**  
+- **Node.js with Express**: Chosen for simplicity and scalability. Express makes it easy to build REST APIs and integrate middleware like Multer for file uploads. Using JavaScript on both frontend and backend allows seamless data handling.
 
-Works well with REST APIs.
+**Q3. Database**  
+- **MongoDB**: Chosen for flexibility. Document metadata can vary per user (filename, path, upload date, etc.), so a schema-less database works better than relational databases. MongoDB scales easily for larger datasets.
 
-Vite gives very fast dev server and optimized builds.
+**Q4. Scaling for 1,000 users**  
+- Use **database indexing** for faster queries.  
+- Move file storage to **cloud storage** (AWS S3 or Google Cloud Storage) to handle more data.  
+- Implement **caching** (Redis) for frequently accessed documents.  
+- Use **load balancing** for backend servers to handle more concurrent requests.  
+- Optimize backend and database queries.
 
-Q2. What backend framework did you choose and why?
+---
 
-I used Node.js with Express.js because:
+## 2. Architecture Overview
 
-It is lightweight and perfect for building REST APIs.
+**Flow Description:**
 
-It handles file uploads easily using Multer.
+1. **Frontend (React)**:  
+   - Users interact via web interface to upload, view, download, and delete documents.  
+   - Sends API requests to the backend.
 
-Integrates smoothly with MongoDB through Mongoose.
+2. **Backend (Express)**:  
+   - Handles API requests.  
+   - Uses **Multer** to handle file uploads.  
+   - Saves metadata to MongoDB and files to storage.  
+   - Streams files back on download requests.
 
-Easy to scale and widely used in full-stack projects.
+3. **Database (MongoDB)**:  
+   - Stores metadata such as file ID, filename, user ID, upload date, file path.
 
-Q3. What database did you choose and why?
+4. **File Storage**:  
+   - Stores actual PDF files (local storage for now, cloud storage recommended for production).
 
-I used MongoDB because:
+**Text Diagram:**
 
-It stores flexible JSON-like documents.
+  +----------------+
+  |   React Frontend  |
+  +--------+-------+
+           |
+           v
+  +--------+--------+
+  |   Express Backend |
+  +--------+--------+
+           |
 
-Perfect for metadata like filename, size, upload date.
 
-Very easy to integrate with the Node.js ecosystem.
+---
 
-Great for scalability and high-read operations.
+## 3. API Specification
 
-Q4. If you were to support 1,000+ users, what changes would you consider?
+### 1. Upload a PDF
 
-To scale the system, I would:
 
-Use MongoDB Atlas instead of local MongoDB.
+### 2. List all documents
 
-Store files on AWS S3 instead of local /uploads folder.
 
-Deploy backend on cloud platforms (Render, Railway, AWS).
+### 3. Download a file
 
-Add load balancer & horizontal scaling for backend.
 
-Use caching (Redis) for faster file metadata retrieval.
+### 4. Delete a file
 
-Implement authentication (JWT) when multiple users exist.
 
-2. Architecture Overview
-System Flow
-React Frontend  →  Express Backend API  →  MongoDB (Metadata)
-                                ↓
-                           Local Uploads/
+---
 
-Explanation
+## 4. Data Flow Description
 
-The frontend sends file uploads or fetch requests.
+**File Upload:**
 
-The backend:
+1. User selects a PDF file and clicks "Upload".  
+2. Frontend sends a **POST** request to `/documents/upload` with the file.  
+3. Backend receives the file using **Multer** middleware.  
+4. Backend stores the file in **local storage** (or cloud storage for production).  
+5. Backend saves metadata in **MongoDB**.  
+6. Backend responds with success message and file ID.  
+7. Frontend updates the document list.
 
-Stores file on the server using Multer.
+**File Download:**
 
-Saves metadata in MongoDB.
+1. User clicks "Download" on a document.  
+2. Frontend sends a **GET** request to `/documents/:id`.  
+3. Backend retrieves metadata from MongoDB.  
+4. Backend streams the PDF file from storage.  
+5. Frontend receives the file and initiates download.
 
-The frontend displays uploaded documents.
+---
 
-For download/delete:
+## 5. Assumptions
 
-Backend reads/deletes file from /uploads.
-
-Updates MongoDB records.
-
-3. API Specification
-1. Upload PDF
-Method	URL
-POST	/documents/upload
-
-Description: Upload a PDF document.
-
-Sample Request (Multipart FormData):
-
-POST /documents/upload
-pdf: <file.pdf>
-
-
-Sample Success Response:
-
-{
-  "message": "File uploaded successfully",
-  "file": {
-    "id": "67945c1ab238e",
-    "filename": "report.pdf",
-    "size": "245 KB"
-  }
-}
-
-2. List All Documents
-Method	URL
-GET	/documents
-
-Description: Returns all uploaded file metadata.
-
-Sample Response:
-
-[
-  {
-    "id": "67945c1ab238e",
-    "filename": "report.pdf",
-    "size": 250000,
-    "createdAt": "2025-01-10"
-  }
-]
-
-3. Download a File
-Method	URL
-GET	/documents/:id
-
-Description: Downloads the file associated with the given ID.
-
-Response:
-Returns the actual PDF file as a stream.
-
-4. Delete a File
-Method	URL
-DELETE	/documents/:id
-
-Description: Deletes file from storage + removes metadata from DB.
-
-Sample Response:
-
-{
-  "message": "File deleted successfully"
-}
-
-4. Data Flow Description
-Q5. What happens when a file is uploaded?
-
-User selects a PDF in the React frontend.
-
-React sends FormData → POST /documents/upload.
-
-Express receives the file using Multer.
-
-Multer stores the file in /uploads folder.
-
-Backend saves metadata to MongoDB:
-
-filename
-
-size
-
-upload date
-
-Backend responds with success.
-
-Frontend refreshes file list and displays message.
-
-What happens when a file is downloaded?
-
-User clicks the “Download” button in frontend.
-
-Frontend calls GET /documents/:id.
-
-Backend finds the file path from MongoDB.
-
-Server streams the file to the browser.
-
-Browser downloads the PDF.
-
-5. Assumptions
-Q6. What assumptions were made?
-
-Only PDF files are allowed.
-
-Maximum file size is assumed below 5–10 MB.
-
-No authentication is needed (single-user system).
-
-Local /uploads folder is used instead of cloud storage.
-
-Concurrency is low, so no queue system or CDN needed.
-
-Backend and frontend run locally (localhost) during development.
+- Maximum PDF file size: **10 MB**.  
+- Only **PDF files** are allowed.  
+- User authentication exists and each user sees only their own files.  
+- Simple single-user operations assumed (concurrency not fully handled).  
+- Files stored locally for now, cloud storage recommended for scaling.  
+- API responses are in **JSON** format for frontend consumption.
