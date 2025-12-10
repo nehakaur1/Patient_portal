@@ -27,9 +27,10 @@ Runs at: http://localhost:3000
 
 ## 3. Example API Calls
 
+
 ### 1. Upload PDF
 POST /documents/upload  
-Body: file: <pdf>
+Body: file (PDF file)
 
 ### 2. Get All Documents
 GET /documents
@@ -39,3 +40,4 @@ GET /documents/:id
 
 ### 4. Delete Document
 DELETE /documents/:id
+
