@@ -1,51 +1,96 @@
+/* ===================== GLOBAL ===================== */
 body {
-  font-family: Arial, sans-serif;
-  background: #eef2f3;
-  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+
+  /* Use your downloaded image */
+  background: url("/bg.jpg") no-repeat center center / cover;
+
+  background-attachment: fixed;  /* smooth scrolling */
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+
+  /* Optional soft overlay (REMOVE if not needed) */
+  backdrop-filter: blur(4px);
 }
 
+
+/*  MAIN CONTAINER*/
 .container {
-  max-width: 700px;
-  margin: auto;
-  background: #fff;
-  padding: 25px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px #ccc;
+  width: 100%;
+  max-width: 780px;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 22px;
+  box-shadow: 0 15px 35px rgba(150, 180, 220, 0.25);
+  border: 1px solid #e2e9f3;
+  transition: 0.3s;
 }
 
+.container:hover {
+  transform: translateY(-3px);
+}
+
+/* ===================== HEADING ===================== */
 h1 {
   text-align: center;
-  color: #333;
+  font-size: 32px;
+  color: #1f4e78;
+  margin-bottom: 30px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
+/* ===================== MESSAGE BOX ===================== */
 .msg {
-  background: #d4edda;
-  color: #155724;
-  padding: 12px;
-  margin-bottom: 15px;
-  border-radius: 5px;
+  background: #e6ffe9;
+  color: #276f40;
+  padding: 14px;
+  border-left: 6px solid #38d16a;
+  border-radius: 12px;
+  margin-bottom: 22px;
+  font-size: 15px;
 }
 
+/* ===================== UPLOAD FORM ===================== */
 .upload-form {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 15px;
+  margin-bottom: 28px;
 }
 
 .upload-form input {
   flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1.7px solid #cfe1f5;
+  background: #f6faff;
 }
 
 .upload-form button {
-  background: #007bff;
-  color: white;
-  padding: 8px 16px;
+  padding: 12px 20px;
+  background: #5fa8ff;
   border: none;
+  border-radius: 12px;
   cursor: pointer;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 5px 14px rgba(120, 170, 255, 0.45);
+  transition: 0.25s ease;
 }
 
 .upload-form button:hover {
-  background: #0056b3;
+  background: #3e92ff;
+  transform: translateY(-3px);
+}
+
+/* ===================== FILE LIST ===================== */
+.file-list h2 {
+  margin-bottom: 18px;
+  color: #1f4e78;
+  font-size: 24px;
+  font-weight: 600;
 }
 
 .file-list ul {
@@ -53,29 +98,96 @@ h1 {
   padding: 0;
 }
 
+/* ===================== FILE ITEM CARD ===================== */
 .file-list li {
-  background: #f9f9f9;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 5px;
+  background: #f0f6ff;
+  padding: 20px;
+  margin-bottom: 16px;
+  border-radius: 18px;
+  border: 1px solid #d7e6f7;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: 0.25s ease;
+  box-shadow: 0 6px 18px rgba(200, 220, 255, 0.35);
 }
 
-.btn-download {
-  background: green;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  cursor: pointer;
-  margin-right: 8px;
+.file-list li:hover {
+  background: #ffffff;
+  transform: translateY(-4px);
 }
 
+/* File name styling */
+.file-list li span {
+  font-size: 16px;
+  font-weight: 500;
+  color: #355f85;
+  max-width: 350px;
+  word-wrap: break-word;
+}
+
+/* Buttons container */
+.file-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* ===================== BUTTONS ===================== */
+.btn-download,
 .btn-delete {
-  background: red;
-  color: white;
+  padding: 10px 16px;
+  border-radius: 10px;
   border: none;
-  padding: 6px 12px;
+  font-weight: 600;
   cursor: pointer;
+  transition: 0.25s ease;
+}
+
+/* Download (medical green) */
+.btn-download {
+  background: #78d9a0;
+  color: #fff;
+}
+
+.btn-download:hover {
+  background: #5acb86;
+}
+
+/* Delete (soft coral red) */
+.btn-delete {
+  background: #ff9aa1;
+  color: #fff;
+}
+
+.btn-delete:hover {
+  background: #ff7b84;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 600px) {
+  .upload-form {
+    flex-direction: column;
+  }
+
+  .upload-form button {
+    width: 100%;
+  }
+
+  .file-list li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px;
+  }
+
+  .file-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .btn-download,
+  .btn-delete {
+    flex: 1;
+    text-align: center;
+  }
 }
