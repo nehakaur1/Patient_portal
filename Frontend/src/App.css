@@ -163,7 +163,7 @@ h1 {
   background: #ff7b84;
 }
 
-/* ===================== RESPONSIVE ===================== */
+/*  RESPONSIVE */
 @media (max-width: 600px) {
   .upload-form {
     flex-direction: column;
